@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clicker Trio 🍍🎋🍯</title>
+  <style>
+    *{box-sizing:border-box;}
+    html,body{height:100%;margin:0;background:#f0f0f0;color:#222;}
+    body{display:flex; justify-content:center; align-items:center; font-family:sans-serif;}
+    .sidebar{position:absolute; left:10px; top:50%; transform:translateY(-50%); display:flex;flex-direction:column;align-items:center;}
+    .sidebar button{background:transparent;border:0;font-size:24px;cursor:pointer;margin:10px 0;transition:transform 0.2s,color 0.2s;}
+    .sidebar button.active{color:#ff8c42;transform:scale(1.3);}
+    .sidebar button:hover{transform:scale(1.2);}
+    .main{display:flex;justify-content:center;align-items:center;position:relative;width:400px;height:650px;}
+    .card{width:360px;max-width:94vw;background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.08);padding:18px;display:grid;gap:14px;align-items:center;text-align:center;position:absolute;top:0;left:0;transition:transform 0.4s ease, opacity 0.4s ease;}
+    .hidden{opacity:0;pointer-events:none;transform:translateX(100px);}
+    .header{display:flex;align-items:center;justify-content:space-between;}
+    .title{font-size:1.2rem;font-weight:700;}
+    .score{font-size:0.95rem;color:#6c6c6c;}
+    .pine-btn,.bambus-btn{width:220px;height:220px;margin:6px auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:96px;cursor:pointer;user-select:none;border:8px solid rgba(0,0,0,0.05);position:relative;transition:transform .12s ease;}
+    .pine-btn:active,.bambus-btn:active{transform:scale(.96);}
+    .stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+    .stat{background:rgba(255,255,255,0.6);padding:8px 12px;border-radius:999px;font-size:0.86rem;box-shadow:inset 0 -2px 0 rgba(0,0,0,0.03);}
+    .upgrades{display:grid;gap:10px;margin-top:6px;}
+    .upgrade{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(180deg,#fff,#fffaf0);box-shadow:0 6px 12px rgba(0,0,0,0.04);}
+    .upgrade button{background:#ffb84d;border:0;padding:8px 10px;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;transition:transform 0.1s;}
+    .upgrade button:hover{transform:scale(1.1);}
+    .upgrade small{display:block;color:#6c6c6c;font-size:0.8rem;}
+    .footer{display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;color:#6c6c6c;margin-top:10px;}
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button id="tabAnanas" class="active" title="Ananas Clicker">🍍</button>
+    <button id="tabBambus" title="Bambus Clicker">🎋</button>
+    <button id="tabMayo" title="Mayonnaise Clicker">🍯</button>
+  </div>
+
+  <!-- Main Cards -->
+  <div class="main">
+    <!-- Ananas Card -->
+    <div id="ananasCard" class="card show">
+      <div class="header"><div><div class="title">Ananas Clicker</div><div class="score">Sammle Ananas 🍍</div></div><div id="scoreDisplay">0 🍍</div></div>
+      <div id="pine" class="pine-btn" style="color:#FFB84D;">🍍</div>
+      <div class="stats"><div class="stat">Pro Klick: <strong id="perClick">1</strong></div><div class="stat">Auto/s: <strong id="perSec">0</strong></div></div>
+      <div class="upgrades">
+        <div class="upgrade"><div><strong>Saftpresse</strong><small>+1 pro Klick</small></div><button id="buy1">Kaufen (10)</button></div>
+        <div class="upgrade"><div><strong>Ananas-Farm</strong><small>+1 automatisch /s</small></div><button id="buy2">Kaufen (30)</button></div>
+        <div class="upgrade"><div><strong>Goldene Ananas</strong><small>Verdoppelt Klick</small></div><button id="buy3">Kaufen (200)</button></div>
+      </div>
+      <div class="footer"><div>Tip: Leertaste klickt 🍍</div><button id="resetBtn">⚠ Zurücksetzen</button></div>
+    </div>
+
+    <!-- Bambus Card -->
+    <div id="bambusCard" class="card hidden">
+      <div class="header"><div><div class="title">Bambus Clicker</div><div class="score">Sammle Bambus 🎋</div></div><div id="bambusScoreDisplay">0 🎋</div></div>
+      <div id="bambusBtn" class="bambus-btn" style="color:#4DB84D;">🎋</div>
+      <div class="stats"><div class="stat">Pro Klick: <strong id="bambusPerClick">1</strong></div><div class="stat">Auto/s: <strong id="bambusPerSec">0</strong></div></div>
+      <div class="upgrades">
+        <div class="upgrade"><div><strong>Bambuswald</strong><small>+1 pro Klick</small></div><button id="bBuy1">Kaufen (10)</button></div>
+        <div class="upgrade"><div><strong>Panda-Helfer</strong><small>+1 automatisch /s</small></div><button id="bBuy2">Kaufen (30)</button></div>
+        <div class="upgrade"><div><strong>Zen-Garten</strong><small>Verdoppelt Klick</small></div><button id="bBuy3">Kaufen (200)</button></div>
+      </div>
+      <div class="footer"><div>Tip: Leertaste klickt 🎋</div><button id="bResetBtn">⚠ Zurücksetzen</button></div>
+    </div>
+
+    <!-- Mayonnaise Card -->
+    <div id="mayoCard" class="card hidden">
+      <div class="header"><div><div class="title">Mayonnaise Clicker</div><div class="score">Sammle Mayonnaise 🍯</div></div><div id="mayoScoreDisplay">0 🍯</div></div>
+      <div id="mayoBtn" class="bambus-btn" style="color:#FFD700;">🍯</div>
+      <div class="stats"><div class="stat">Pro Klick: <strong id="mayoPerClick">1</strong></div><div class="stat">Auto/s: <strong id="mayoPerSec">0</strong></div></div>
+      <div class="upgrades">
+        <div class="upgrade"><div><strong>Rührgerät</strong><small>+1 pro Klick</small></div><button id="mBuy1">Kaufen (10)</button></div>
+        <div class="upgrade"><div><strong>Mayofabrik</strong><small>+1 automatisch /s</small></div><button id="mBuy2">Kaufen (30)</button></div>
+        <div class="upgrade"><div><strong>Goldene Mayo</strong><small>Verdoppelt Klick</small></div><button id="mBuy3">Kaufen (200)</button></div>
+      </div>
+      <div class="footer"><div>Tip: Leertaste klickt 🍯</div><button id="mResetBtn">⚠ Zurücksetzen</button></div>
+    </div>
+  </div>
+
+  <script>
+    // Tab Umschalten
+    const ananasCard = document.getElementById('ananasCard');
+    const bambusCard = document.getElementById('bambusCard');
+    const mayoCard = document.getElementById('mayoCard');
+    const tabAnanas = document.getElementById('tabAnanas');
+    const tabBambus = document.getElementById('tabBambus');
+    const tabMayo = document.getElementById('tabMayo');
+    function switchTo(card){
+      [ananasCard,bambusCard,mayoCard].forEach(c=>c.classList.add('hidden'));
+      card.classList.remove('hidden');
+      [tabAnanas,tabBambus,tabMayo].forEach(b=>b.classList.remove('active'));
+      if(card===ananasCard) tabAnanas.classList.add('active');
+      if(card===bambusCard) tabBambus.classList.add('active');
+      if(card===mayoCard) tabMayo.classList.add('active');
+    }
+    tabAnanas.onclick=()=>switchTo(ananasCard);
+    tabBambus.onclick=()=>switchTo(bambusCard);
+    tabMayo.onclick=()=>switchTo(mayoCard);
+
+    // --- Clicker JS ---
+    // Ananas
+    const pine=document.getElementById('pine'),scoreDisplay=document.getElementById('scoreDisplay'),perClickEl=document.getElementById('perClick'),perSecEl=document.getElementById('perSec'),buy1=document.getElementById('buy1'),buy2=document.getElementById('buy2'),buy3=document.getElementById('buy3'),resetBtn=document.getElementById('resetBtn');
+    let aState=JSON.parse(localStorage.getItem('ananas'))||{score:0,perClick:1,perSec:0,mult:1,owned:{}};
+    function aRender(){scoreDisplay.textContent=Math.floor(aState.score)+' 🍍';perClickEl.textContent=aState.perClick*aState.mult;perSecEl.textContent=aState.perSec;buy1.textContent=`Kaufen (${10 + (aState.owned.press||0)*8})`;buy2.textContent=`Kaufen (${30 + (aState.owned.farm||0)*18})`;buy3.textContent=aState.owned.gold?'Gekauft':'Kaufen (200)';buy3.disabled=!!aState.owned.gold;localStorage.setItem('ananas',JSON.stringify(aState));}
+    pine.onclick=()=>{aState.score+=aState.perClick*aState.mult;aRender();};
+    buy1.onclick=()=>{if(aState.score>=10){aState.score-=10;aState.perClick++;aState.owned.press=(aState.owned.press||0)+1;aRender();}};
+    buy2.onclick=()=>{if(aState.score>=30){aState.score-=30;aState.perSec++;aState.owned.farm=(aState.owned.farm||0)+1;aRender();}};
+    buy3.onclick=()=>{if(!aState.owned.gold && aState.score>=200){aState.score-=200;aState.mult*=2;aState.owned.gold=1;aRender();}};
+    resetBtn.onclick=()=>{if(confirm('⚠ ACHTUNG! Willst du wirklich alle Ananas-Daten löschen?')){localStorage.removeItem('ananas');alert('Alle Ananas-Daten gelöscht!');location.reload();}};
+    setInterval(()=>{if(aState.perSec>0){aState.score+=aState.perSec;aRender();}},1000);
+    aRender();
+
+    // Bambus
+    const bambusBtn=document.getElementById('bambusBtn'),bambusScoreDisplay=document.getElementById('bambusScoreDisplay'),bambusPerClickEl=document.getElementById('bambusPerClick'),bambusPerSecEl=document.getElementById('bambusPerSec'),bBuy1=document.getElementById('bBuy1'),bBuy2=document.getElementById('bBuy2'),bBuy3=document.getElementById('bBuy3'),bResetBtn=document.getElementById('bResetBtn');
+    let bState=JSON.parse(localStorage.getItem('bambus'))||{score:0,perClick:1,perSec:0,mult:1,owned:{}};
+    function bRender(){bambusScoreDisplay.textContent=Math.floor(bState.score)+' 🎋';bambusPerClickEl.textContent=bState.perClick*bState.mult;bambusPerSecEl.textContent=bState.perSec;bBuy1.textContent=`Kaufen (${10 + (bState.owned.forest||0)*8})`;bBuy2.textContent=`Kaufen (${30 + (bState.owned.panda||0)*18})`;bBuy3.textContent=bState.owned.garden?'Gekauft':'Kaufen (200)';bBuy3.disabled=!!bState.owned.garden;localStorage.setItem('bambus',JSON.stringify(bState));}
+    bambusBtn.onclick=()=>{bState.score+=bState.perClick*bState.mult;bRender();};
+    bBuy1.onclick=()=>{if(bState.score>=10){bState.score-=10;bState.perClick++;bState.owned.forest=(bState.owned.forest||0)+1;bRender();}};
+    bBuy2.onclick=()=>{if(bState.score>=30){bState.score-=30;bState.perSec++;bState.owned.panda=(bState.owned.panda||0)+1;bRender();}};
+    bBuy3.onclick=()=>{if(!bState.owned.garden && bState.score>=200){bState.score-=200;bState.mult*=2;bState.owned.garden=1;bRender();}};
+    bResetBtn.onclick=()=>{if(confirm('⚠ ACHTUNG! Willst du wirklich alle Bambus-Daten löschen?')){localStorage.removeItem('bambus');alert('Alle Bambus-Daten gelöscht!');location.reload();}};
+    setInterval(()=>{if(bState.perSec>0){bState.score+=bState.perSec;bRender();}},1000);
+    bRender();
+
+    // Mayonnaise
+    const mayoBtn=document.getElementById('mayoBtn'),mayoScoreDisplay=document.getElementById('mayoScoreDisplay'),mayoPerClickEl=document.getElementById('mayoPerClick'),mayoPerSecEl=document.getElementById('mayoPerSec'),mBuy1=document.getElementById('mBuy1'),mBuy2=document.getElementById('mBuy2'),mBuy3=document.getElementById('mBuy3'),mResetBtn=document.getElementById('mResetBtn');
+    let mState=JSON.parse(localStorage.getItem('mayo'))||{score:0,perClick:1,perSec:0,mult:1,owned:{}};
+    function mRender(){mayoScoreDisplay.textContent=Math.floor(mState.score)+' 🍯';mayoPerClickEl.textContent=mState.perClick*mState.mult;mayoPerSecEl.textContent=mState.perSec;mBuy1.textContent=`Kaufen (${10 + (mState.owned.tool||0)*8})`;mBuy2.textContent=`Kaufen (${30 + (mState.owned.factory||0)*18})`;mBuy3.textContent=mState.owned.gold?'Gekauft':'Kaufen (200)';mBuy3.disabled=!!mState.owned.gold;localStorage.setItem('mayo',JSON.stringify(mState));}
+    mayoBtn.onclick=()=>{mState.score+=mState.perClick*mState.mult;mRender();};
+    mBuy1.onclick=()=>{if(mState.score>=10){mState.score-=10;mState.perClick++;mState.owned.tool=(mState.owned.tool||0)+1;mRender();}};
+    mBuy2.onclick=()=>{if(mState.score>=30){mState.score-=30;mState.perSec++;mState.owned.factory=(mState.owned.factory||0)+1;mRender();}};
+    mBuy3.onclick=()=>{if(!mState.owned.gold && mState.score>=200){mState.score-=200;mState.mult*=2;mState.owned.gold=1;mRender();}};
+    mResetBtn.onclick=()=>{if(confirm('⚠ ACHTUNG! Willst du wirklich alle Mayonnaise-Daten löschen?')){localStorage.removeItem('mayo');alert('Alle Mayonnaise-Daten gelöscht!');location.reload();}};
+    setInterval(()=>{if(mState.perSec>0){mState.score+=mState.perSec;mRender();}},1000);
+    mRender();
+  </script>
+</body>
+</html>
